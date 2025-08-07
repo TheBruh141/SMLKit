@@ -6,13 +6,6 @@ import sys
 from typing import Union, TextIO, Optional
 
 
-def main():
-    # Construct Config with the desired action
-    config = parse_args()
-    # Execute the chosen action
-    config.execute()
-
-
 @dataclass
 class Config:
     """
@@ -20,6 +13,7 @@ class Config:
 
     Uses factory methods (constructor pattern) to build a Config ready to run an action.
     """
+
     smlkit_root_location: Path = field(init=False)
     dest_project_location: Path = field(init=False)
     action: str = field(init=False)
@@ -130,18 +124,45 @@ def parse_args() -> Config:
         description="smlkit: A command-line tool for managing machine learning projects."
     )
     group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument("--init", dest="init_path", metavar="PATH", type=Path,
-                       help="Initialize a new smlkit project at the specified path.")
-    group.add_argument("--project-structure", action="store_true",
-                       help="Display the predefined project structure.")
-    group.add_argument("--serve", "-s", dest="serve_root", metavar="PROJECT_ROOT", type=Path,
-                       help="Launch the web-based dashboard for an existing project.")
-    group.add_argument("--edit", dest="edit_root", metavar="PROJECT_ROOT", type=Path,
-                       help="Interactively edit components of your project.")
-    group.add_argument("--validate", dest="validate_root", metavar="PROJECT_ROOT", type=Path,
-                       help="Validate your project for naming conventions and structure.")
-    group.add_argument("--containerize", dest="containerize_root", metavar="PROJECT_ROOT", type=Path,
-                       help="Package your project into a Docker container.")
+    group.add_argument(
+        "--init",
+        dest="init_path",
+        metavar="PATH",
+        type=Path,
+        help="Initialize a new smlkit project at the specified path.",
+    )
+    group.add_argument(
+        "--project-structure", action="store_true", help="Display the predefined project structure."
+    )
+    group.add_argument(
+        "--serve",
+        "-s",
+        dest="serve_root",
+        metavar="PROJECT_ROOT",
+        type=Path,
+        help="Launch the web-based dashboard for an existing project.",
+    )
+    group.add_argument(
+        "--edit",
+        dest="edit_root",
+        metavar="PROJECT_ROOT",
+        type=Path,
+        help="Interactively edit components of your project.",
+    )
+    group.add_argument(
+        "--validate",
+        dest="validate_root",
+        metavar="PROJECT_ROOT",
+        type=Path,
+        help="Validate your project for naming conventions and structure.",
+    )
+    group.add_argument(
+        "--containerize",
+        dest="containerize_root",
+        metavar="PROJECT_ROOT",
+        type=Path,
+        help="Package your project into a Docker container.",
+    )
 
     args = parser.parse_args()
 
@@ -159,7 +180,3 @@ def parse_args() -> Config:
         return Config.for_containerize(args.containerize_root)
 
     parser.error("No valid action provided.")
-
-
-if __name__ == "__main__":
-    main()
